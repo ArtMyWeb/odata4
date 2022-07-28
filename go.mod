@@ -1,4 +1,4 @@
-module artmyweb/odata4
+module github.com/ArtMyWeb/odata4
 
 go 1.17
 
