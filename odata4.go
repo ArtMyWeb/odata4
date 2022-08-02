@@ -73,6 +73,7 @@ func getCookies() []*http.Cookie {
 	resp, _, err := request.Post(url).
 		Send(loginData).
 		EndStruct(&loginResponse)
+
 	if err != nil {
 		CheckError("Try to Login", err[0])
 	}

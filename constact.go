@@ -97,7 +97,7 @@ func GetContactIdByNameAndPhone(phone, email string) string {
 	return ""
 }
 
-func CreateNewContactAndGetID(c NewContact) string {
+func CreateNewContactAndGetID(c NewContact) (string, error) {
 	var contact ContactData
 
 	url := getPath("/0/odata/Contact")
@@ -112,11 +112,12 @@ func CreateNewContactAndGetID(c NewContact) string {
 		EndStruct(&contact)
 
 	if errs != nil {
-		CheckError("Create New Contact", errs[0])
+		ShowError("Create New Contact", errs[0])
+		return "", errs[0]
 
 	}
 
-	return contact.ID
+	return contact.ID, nil
 }
 
 func UpdateContact(params UpdateContactParams, userID string) error {

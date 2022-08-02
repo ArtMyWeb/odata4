@@ -23,7 +23,7 @@ func getPath(url string) string {
 	return c.ODATA4_URL + url
 }
 
-func getIdNameData(route string) []IdNameData {
+func getIdNameData(route string) ([]IdNameData, error) {
 	var data IdNameDataResponse
 
 	url := getPath(route)
@@ -32,18 +32,23 @@ func getIdNameData(route string) []IdNameData {
 	request := gorequest.New()
 	resp, _, errs := request.Get(url).AddCookies(Cookies).EndStruct(&data)
 	if errs != nil {
-		CheckError("Get Data By URL: "+url, errs[0])
+		ShowError("Get Data By URL: "+url, errs[0])
+		return []IdNameData{}, errs[0]
 	}
 
 	if resp.StatusCode == http.StatusOK {
-		return data.Value
+		return data.Value, nil
 	}
 
-	return []IdNameData{}
+	return []IdNameData{}, nil
 }
 
 func getODataIDByName(url, name string) string {
-	items := getIdNameData(url)
+	items, err := getIdNameData(url)
+
+	if err != nil {
+		return ""
+	}
 
 	for _, item := range items {
 		if item.Name == name {
@@ -57,5 +62,15 @@ func getODataIDByName(url, name string) string {
 func CheckError(message string, err error) {
 	if err != nil {
 		log.Fatalln(time.Now().Format("Mon, 02 Jan 2006 15:04:05 "), message, err.Error())
+	}
+}
+
+func ShowError(message string, err error) {
+	if err != nil {
+		log.Printf(
+			"[%s] %s: %s \n",
+			time.Now().Format("Mon, 02 Jan 2006 15:04:05 "),
+			message,
+			err.Error())
 	}
 }

@@ -92,7 +92,7 @@ func (o *NewOrderData) SetSourcePayment(name string) {
 
 func CreateNewOrderAndGetID(o NewOrderData) string {
 	order, err := CreateNewOrder(o)
-	CheckError("Create New Order in CRM", err)
+	ShowError("Create New Order in CRM", err)
 
 	if err == nil {
 		return order.Id
@@ -115,7 +115,7 @@ func CreateNewOrder(o NewOrderData) (OrderData, error) {
 		Send(o).
 		EndStruct(&order)
 	if errs != nil {
-		CheckError("Create New Contact", errs[0])
+		ShowError("Create New Contact", errs[0])
 	}
 
 	if resp.StatusCode == http.StatusCreated {
