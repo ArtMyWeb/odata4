@@ -55,6 +55,13 @@ type (
 		UsrReasonUnsubscribe string `json:"UsrReasonUnsubscribe,omitempty"`
 		UsrBank              string `json:"UsrBank,omitempty"`
 	}
+
+	ListOfPaymentSettings struct {
+		Currency         []IdNameData `json:"currency"`
+		UsrTypePayment   []IdNameData `json:"usrTypePayment"`
+		UsrStatusPayment []IdNameData `json:"usrStatusPayment"`
+		UsrSourcePayment []IdNameData `json"usrSourcePayment"`
+	}
 )
 
 const (

@@ -19,8 +19,75 @@ type (
 	}
 )
 
+const (
+	CURRENCY           = "Currency"
+	USR_TYPE_PAYMENT   = "UsrTypePayment"
+	USR_STATUS_PAYMENT = "UsrStatusPayment"
+	USR_SOURCE_PAYMENT = "UsrSourcePayment"
+)
+
 func getPath(url string) string {
 	return c.ODATA4_URL + url
+}
+
+func GetListOfPaymentSettings() (ListOfPaymentSettings, error) {
+	var err error
+
+	currency, errCurrency := getIdNameData("/0/odata/Currency")
+	ShowError("Can't get Currency List", errCurrency)
+	if errCurrency != nil {
+		err = errCurrency
+	}
+
+	usrTypePayment, errUsrTypePayment := getIdNameData("/0/odata/UsrTypePayment")
+	ShowError("Can't get UsrTypePayment List", errUsrTypePayment)
+	if errUsrTypePayment != nil {
+		err = errUsrTypePayment
+	}
+
+	usrStatusPayment, errUsrStatusPayment := getIdNameData("/0/odata/UsrStatusPayment")
+	ShowError("Can't get UsrStatusPayment List", errUsrStatusPayment)
+	if errUsrStatusPayment != nil {
+		err = errUsrStatusPayment
+	}
+
+	usrSourcePayment, errUsrSourcePayment := getIdNameData("/0/odata/UsrSourcePayment")
+	ShowError("Can't get UsrSourcePayment List", errUsrSourcePayment)
+	if errUsrSourcePayment != nil {
+		err = errUsrSourcePayment
+	}
+
+	return ListOfPaymentSettings{
+		Currency:         currency,
+		UsrTypePayment:   usrTypePayment,
+		UsrStatusPayment: usrStatusPayment,
+		UsrSourcePayment: usrSourcePayment,
+	}, err
+
+}
+
+func (data *ListOfPaymentSettings) GetIdByTypeAndName(t, name string) (result string) {
+
+	switch t {
+	case CURRENCY:
+		result = getIdByName(data.Currency, name)
+	case USR_STATUS_PAYMENT:
+		result = getIdByName(data.UsrStatusPayment, name)
+	case USR_TYPE_PAYMENT:
+		result = getIdByName(data.UsrTypePayment, name)
+	case USR_SOURCE_PAYMENT:
+		result = getIdByName(data.UsrSourcePayment, name)
+	}
+	return result
+}
+
+func getIdByName(items []IdNameData, name string) string {
+	for _, item := range items {
+		if item.Name == name {
+			return item.ID
+		}
+	}
+	return ""
 }
 
 func getIdNameData(route string) ([]IdNameData, error) {
@@ -50,18 +117,17 @@ func getODataIDByName(url, name string) string {
 		return ""
 	}
 
-	for _, item := range items {
-		if item.Name == name {
-			return item.ID
-		}
-	}
-
-	return ""
+	return getIdByName(items, name)
 }
 
 func CheckError(message string, err error) {
 	if err != nil {
-		log.Fatalln(time.Now().Format("Mon, 02 Jan 2006 15:04:05 "), message, err.Error())
+		log.Fatalf(
+			"[%s] %s: %s \n",
+			time.Now().Format("Mon, 02 Jan 2006 15:04:05 "),
+			message,
+			err.Error(),
+		)
 	}
 }
 
