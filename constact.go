@@ -81,7 +81,7 @@ func GetContactIdByNameAndPhone(phone, email string) string {
 
 	filter := createFilterByPhoneAndNumberForContact(phone, email)
 	url := getPath("/0/odata/ContactCommunication" + filter)
-	Cookies = GetConnectionCookies()
+	Cookies = GetConnectionCookies(false)
 
 	request := gorequest.New()
 	resp, _, errs := request.Get(url).AddCookies(Cookies).EndStruct(&contacts)
@@ -101,7 +101,7 @@ func CreateNewContactAndGetID(c NewContact) (string, error) {
 	var contact ContactData
 
 	url := getPath("/0/odata/Contact")
-	Cookies = GetConnectionCookies()
+	Cookies = GetConnectionCookies(false)
 	hParam := getParamsFromCookies(COOKIE_BPMCSRF)
 
 	request := gorequest.New()
@@ -122,7 +122,7 @@ func CreateNewContactAndGetID(c NewContact) (string, error) {
 
 func UpdateContact(params UpdateContactParams, userID string) error {
 	url := getPath("/0/odata/Contact(" + userID + ")")
-	Cookies = GetConnectionCookies()
+	Cookies = GetConnectionCookies(false)
 	hParams := getParamsFromCookies(COOKIE_BPMCSRF)
 
 	request := gorequest.New()

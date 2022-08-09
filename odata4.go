@@ -39,13 +39,18 @@ const COOKIE_BPMCSRF = "BPMCSRF"
 
 func init() {
 	env.Parse(&c)
-	Cookies = GetConnectionCookies()
+	Cookies = GetConnectionCookies(true)
 
 }
 
-func GetConnectionCookies() []*http.Cookie {
+func GetConnectionCookies(forceRefresh bool) []*http.Cookie {
 	lock.Lock()
 	defer lock.Unlock()
+
+	if forceRefresh {
+		Cookies = getCookies()
+		return Cookies
+	}
 
 	if Cookies == nil {
 		log.Println("Cookies not found")
