@@ -112,7 +112,7 @@ func CreateNewOrder(o NewOrderData) (OrderData, error) {
 	var order OrderData
 
 	url := getPath("/0/odata/UsrDonate")
-	Cookies = GetConnectionCookies()
+	Cookies = GetConnectionCookies(false)
 	hParam := getParamsFromCookies(COOKIE_BPMCSRF)
 
 	request := gorequest.New()
@@ -134,7 +134,7 @@ func CreateNewOrder(o NewOrderData) (OrderData, error) {
 
 func UpdateOrder(params UpdateOrderDataParams, orderID string) error {
 	url := getPath("/0/odata/UsrDonate(" + orderID + ")")
-	Cookies = GetConnectionCookies()
+	Cookies = GetConnectionCookies(false)
 	hParam := getParamsFromCookies(COOKIE_BPMCSRF)
 
 	request := gorequest.New()

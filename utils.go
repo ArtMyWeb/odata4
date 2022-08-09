@@ -32,6 +32,8 @@ func getPath(url string) string {
 
 func GetListOfPaymentSettings() (ListOfPaymentSettings, error) {
 	var err error
+	//hotfix
+	Cookies = GetConnectionCookies(true)
 
 	currency, errCurrency := getIdNameData("/0/odata/Currency")
 	ShowError("Can't get Currency List", errCurrency)
@@ -94,7 +96,7 @@ func getIdNameData(route string) ([]IdNameData, error) {
 	var data IdNameDataResponse
 
 	url := getPath(route)
-	Cookies = GetConnectionCookies()
+	Cookies = GetConnectionCookies(false)
 
 	request := gorequest.New()
 	resp, _, errs := request.Get(url).AddCookies(Cookies).EndStruct(&data)
