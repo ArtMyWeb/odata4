@@ -81,7 +81,7 @@ func GetContactIdByNameAndPhone(phone, email string) string {
 
 	filter := createFilterByPhoneAndNumberForContact(phone, email)
 	url := getPath("/0/odata/ContactCommunication" + filter)
-	Cookies = GetConnectionCookies(false)
+	Cookies = GetConnectionCookies(true)
 
 	request := gorequest.New()
 	resp, _, errs := request.Get(url).AddCookies(Cookies).EndStruct(&contacts)
